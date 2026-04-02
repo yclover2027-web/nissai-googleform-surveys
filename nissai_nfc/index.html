@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クローバー薬局にっさい店 ご利用の方へ</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 「必須」ラベルがスマホ等で「必」「須」と2行に分かれるのを防ぐ */
+        .required {
+            white-space: nowrap !important;
+            display: inline-block !important;
+        }
+    </style>
+
+    <!-- YubinBango for Address Auto-fill -->
+    <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <!-- 初期状態はローディングを表示 -->
+        <div id="loadingMessage" style="text-align: center; padding: 50px 20px;">
+            <p>LINE情報を読み込み中...</p>
+            <div class="spinner"
+                style="display: inline-block; width: 30px; height: 30px; border: 4px solid #f3f3f3; border-top: 4px solid #6cb281; border-radius: 50%; animation: spin 1s linear infinite;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+        </div>
+
+        <div class="form-header" style="display: none;">
+            <img src="マスコット/アンケート.png" alt="クローバー薬局 マスコット" class="mascot-img">
+            <div>
+                <h1>クローバー薬局にっさい店 ご利用の方へ</h1>
+                <p>ご来局前にこちらの問診票にご記入をお願いいたします。</p>
+            </div>
+        </div>
+
+        <!-- YubinBango用クラス: h-adr -->
+        <form id="customForm" class="h-adr" style="display: none;">
+
+            <!-- YubinBango設定(必須) : 日本を指定 -->
+            <span class="p-country-name" style="display:none;">Japan</span>
+
+            <!-- ====== Section 1: 基本情報 ====== -->
+            <div class="form-section">
+                <h2 class="section-title">1. 基本情報</h2>
+
+                <div class="form-group">
+                    <label for="entry.2108592001">お名前 <span class="required">必須</span></label>
+                    <input type="text" id="entry.2108592001" name="entry.2108592001" placeholder="例: クローバー 太郎" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry.1016463931">フリガナ <span class="required">必須</span></label>
+                    <input type="text" id="entry.1016463931" name="entry.1016463931" placeholder="例: クローバー タロウ"
+                        required>
+                    <small class="help-text" style="color:#718096; font-size:0.8rem;">お名前を入力すると自動で補完されます。修正も可能です。</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry.622897563">電話番号（連絡がつく電話番号） <span class="required">必須</span></label>
+                    <input type="tel" id="entry.622897563" name="entry.622897563" placeholder="例: 090-1234-5678"
+                        required>
+                </div>
+
+                <div class="form-group" style="background: #f0faf3; padding: 15px; border-radius: 8px; border: 1px solid #6cb281;">
+                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                        <input type="checkbox" id="mynumber-checkbox" style="width: 20px; height: 20px; accent-color: #6cb281;">
+                        <span>有効な保険証（マイナ含む）を持参している方は性別・生年月日・住所をスキップ可能</span>
+                    </label>
+                </div>
+
+                <div class="form-group mynumber-skip-target">
+                    <label>性別 <span class="required">必須</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="entry.1417926586" value="男性" required>
+                            <span>男性</span></label>
+                        <label class="radio-label"><input type="radio" name="entry.1417926586" value="女性">
+                            <span>女性</span></label>
+                        <label class="radio-label" style="display:none;"><input type="radio" name="entry.1417926586"
+                                value="その他"> <span>その他</span></label>
+                    </div>
+                </div>
+
+                <div class="form-group mynumber-skip-target">
+                    <label>生年月日 <span class="required">必須</span></label>
+                    <div class="date-select-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <select id="birth-year" name="birth-year" required
+                            style="flex: 2; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; color: #4a5568;">
+                            <option value="">西暦（和暦）</option>
+                        </select>
+                        <select id="birth-month" name="birth-month" required
+                            style="flex: 1; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; color: #4a5568;">
+                            <option value="">月</option>
+                        </select>
+                        <select id="birth-day" name="birth-day" required
+                            style="flex: 1; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem; color: #4a5568;">
+                            <option value="">日</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <!-- 住所(自動入力対応) -->
+                <div class="form-group mynumber-skip-target">
+                    <label for="postal-code">郵便番号 (ハイフンなし可)</label>
+                    <div class="postal-wrapper">
+                        <span class="postal-mark">〒</span>
+                        <input type="tel" id="postal-code" class="p-postal-code" size="8" maxlength="8"
+                            inputmode="numeric" pattern="[0-9]*" placeholder="1234567">
+                        <small class="help-text">入力で住所が自動補完されます</small>
+                    </div>
+                </div>
+
+                <div class="form-group mynumber-skip-target">
+                    <label for="entry.375838857">ご住所 <span class="required">必須</span></label>
+                    <input type="text" id="entry.375838857" name="entry.375838857"
+                        class="p-region p-locality p-street-address p-extended-address" placeholder="例: 東京都〇〇区〇〇 1-2-3"
+                        required>
+                </div>
+
+                <div class="form-group" style="display: none;">
+                    <label for="entry.1331782479">LINE名</label>
+                    <input type="text" id="entry.1331782479" name="entry.1331782479"
+                        placeholder="LINE名と本名が違う場合のみLINE名を記入してください。（苗字のみ・名前のみでも記入）">
+                </div>
+
+
+                <!-- NFC経由は初来局が前提のため「初めてですか？」の質問は不要 -->
+                <input type="hidden" name="entry.998853333" value="初めてです。">
+            </div>
+
+            <div id="extended-questions">
+                <!-- ====== Section 2: 問診情報 ====== -->
+                <div class="form-section">
+                    <h2 class="section-title">2. 問診項目</h2>
+
+                    <!-- Q1. 症状 -->
+                    <div class="form-group">
+                        <label for="entry.150137659">本日はどのような症状で受診されましたか？</label>
+                        <textarea id="entry.150137659" name="entry.150137659" rows="3"
+                            placeholder="例: 発熱、喉の痛み、腹痛など"></textarea>
+                    </div>
+
+                    <!-- Q2. ジェネリック -->
+                    <div class="form-group">
+                        <label style="white-space: nowrap;">ジェネリック医薬品をご希望になりますか？ <span
+                                class="required">必須</span></label>
+                        <div class="form-group-info" style="font-size: 0.8rem; color: #718096; margin-bottom: 8px;">
+                            医療制度の変更により、ジェネリック医薬品（後発医薬品）がある薬の中に、先発医薬品を希望した場合、一部「別途自費」としてご負担いただきます。</div>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="entry.893585706"
+                                    value="ジェネリック医薬品を希望します" required> <span>はい</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.893585706" value="先発医薬品を希望します">
+                                <span>いいえ（先発品）</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.893585706" value="どちらでも良い">
+                                <span>どちらでも良い</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Q3. お薬手帳 -->
+                    <div class="form-group">
+                        <label>お薬手帳をお持ちですか？ <span class="required">必須</span></label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="entry.1482297776" value="はい" required>
+                                <span>はい</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.1482297776" value="いいえ（いらない）">
+                                <span>いいえ</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.1482297776" value="持っているが忘れた">
+                                <span>持っているが忘れた</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.1482297776" value="電子お薬手帳">
+                                <span>電子お薬手帳</span></label>
+                            <label class="radio-label" style="display:none;"><input type="radio" name="entry.1482297776"
+                                    value="いいえ（持っていないので作成希望）"> <span>作成希望</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Q4. 体質 -->
+                    <div class="form-group">
+                        <label>ご自分に当てはまる体質はありますか？</label>
+                        <div class="form-group-info" style="font-size: 0.85rem; color: #718096; margin-bottom: 8px;">
+                            当てはまるものがあればチェックしてください（複数可）</div>
+                        <div class="checkbox-group" id="taishitsu-details"
+                            style="padding-left: 15px; border-left: 3px solid #6cb281; background: #fdfdfd; padding: 15px; border-radius: 4px;">
+                            <label class="checkbox-label"><input type="checkbox" class="taishitsu-check" value="胃弱">
+                                <span>胃弱</span></label>
+                            <label class="checkbox-label"><input type="checkbox" class="taishitsu-check" value="下痢しやすい">
+                                <span>下痢しやすい</span></label>
+                            <label class="checkbox-label"><input type="checkbox" class="taishitsu-check" value="便秘しやすい">
+                                <span>便秘しやすい</span></label>
+                            <div class="input-inline" style="margin-top: 5px;">
+                                <label class="checkbox-label"><input type="checkbox" id="taishitsu_other_checkbox"
+                                        class="taishitsu-check" value="その他"
+                                        onchange="toggleOtherInput('taishitsu_other_checkbox', 'taishitsu_other')">
+                                    <span>その他:</span></label>
+                                <input type="text" id="taishitsu_other" placeholder="その他の体質" style="display:none;">
+                            </div>
+                        </div>
+                        <input type="hidden" id="entry.854718610" name="entry.854718610" value="体質: いいえ">
+                    </div>
+
+                    <!-- Q5. アレルギー -->
+                    <div class="form-group">
+                        <label>アレルギーで当てはまるものはありますか？</label>
+                        <div class="form-group-info" style="font-size: 0.85rem; color: #718096; margin-bottom: 8px;">
+                            当てはまるものがあればチェックしてください（複数可）</div>
+                        <div class="checkbox-group"
+                            style="padding-left: 15px; border-left: 3px solid #6cb281; background: #fdfdfd; padding: 15px; border-radius: 4px;">
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291" value="卵">
+                                <span>卵</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291" value="牛乳">
+                                <span>牛乳</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291" value="花粉症">
+                                <span>花粉症</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291"
+                                    value="アトピー性皮膚炎">
+                                <span>アトピー性皮膚炎</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291" value="喘息">
+                                <span>喘息</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.413348291" value="金属">
+                                <span>金属</span></label>
+                            <div class="input-inline" style="margin-top: 5px;">
+                                <label class="checkbox-label"><input type="checkbox" id="allergy_other_checkbox"
+                                        name="entry.413348291" class="allergy-other-check" value="その他"
+                                        onchange="toggleOtherInput('allergy_other_checkbox', 'allergy_other_text')">
+                                    <span>その他:</span></label>
+                                <input type="text" id="allergy_other_text" placeholder="その他のアレルギー"
+                                    style="display:none;">
+                            </div>
+                        </div>
+                        <input type="hidden" id="entry.1377007546" name="entry.1377007546" value="いいえ">
+                    </div>
+
+                    <!-- Q6. 副作用 -->
+                    <div class="form-group">
+                        <label>今までお薬を飲んで、副作用が出た経験などはありますか？</label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="entry.918293202" value="はい">
+                                <span>はい</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.918293202" value="いいえ">
+                                <span>いいえ</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry.1883828617">➔ 具体的には？</label>
+                        <input type="text" id="entry.1883828617" name="entry.1883828617" placeholder="（例）ピリン系、じんましん等">
+                    </div>
+
+                    <!-- Q7. 他の医療機関 -->
+                    <div class="form-group">
+                        <label>他の医療機関でもらっている薬などはありますか？ <span class="required">必須</span></label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="entry.1565002541" value="はい" required>
+                                <span>はい</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.1565002541" value="いいえ">
+                                <span>いいえ</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Q8. 市販薬・サプリ -->
+                    <div class="form-group">
+                        <label>他に飲んでいる市販薬やサプリメント等はありますか？</label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="entry.1965254761" value="はい">
+                                <span>はい</span></label>
+                            <label class="radio-label"><input type="radio" name="entry.1965254761" value="いいえ">
+                                <span>いいえ</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry.1747385177">➔ 市販薬、サプリメント名</label>
+                        <input type="text" id="entry.1747385177" name="entry.1747385177"
+                            placeholder="服用中のものがあればご記入ください">
+                    </div>
+
+                    <!-- Q9. 病気 -->
+                    <div class="form-group">
+                        <label>右記の病気にかかったことはありますか？（現在治療中も含む）</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="緑内障">
+                                <span>緑内障</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="前立腺肥大">
+                                <span>前立腺肥大</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="気管支喘息">
+                                <span>気管支喘息</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="糖尿病">
+                                <span>糖尿病</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="高血圧">
+                                <span>高血圧</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="高脂血症">
+                                <span>高脂血症</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="骨粗鬆症">
+                                <span>骨粗鬆症</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.730294101" value="片頭痛">
+                                <span>片頭痛</span></label>
+                            <div class="input-inline">
+                                <label class="checkbox-label"><input type="checkbox" id="disease_other_checkbox"
+                                        name="entry.730294101" value="__other_option__"
+                                        onchange="toggleOtherInput('disease_other_checkbox', 'disease_other_text')">
+                                    <span>その他:</span></label>
+                                <input type="text" id="disease_other_text" name="entry.730294101.other_option_response"
+                                    placeholder="その他の病名" style="display:none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q10. 飲食物 -->
+                    <div class="form-group">
+                        <label>日頃飲んだり食べたりするものはありますか？</label>
+                        <div class="form-group-info" style="font-size: 0.85rem; color: #718096; margin-bottom: 8px;">
+                            当てはまるものがあればチェックしてください（複数可）</div>
+                        <div class="checkbox-group"
+                            style="padding-left: 15px; border-left: 3px solid #6cb281; background: #fdfdfd; padding: 15px; border-radius: 4px;">
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603"
+                                    value="グレープフルーツジュース">
+                                <span>グレープフルーツジュース</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="納豆">
+                                <span>納豆</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="クロレラ">
+                                <span>クロレラ</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="青汁">
+                                <span>青汁</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="コーヒー">
+                                <span>コーヒー</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="緑茶">
+                                <span>緑茶</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="entry.1740273603" value="お酒">
+                                <span>お酒</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Q11. 女性の方・15歳未満の方 -->
+                    <div class="form-group">
+                        <label>★女性の方へ<br>該当する場合はチェックしてください</label>
+                        <div class="checkbox-group" style="margin-bottom: 8px;">
+                            <label class="checkbox-label"><input type="checkbox" name="women_status" class="women-check"
+                                    value="妊娠中">
+                                <span>妊娠中</span></label>
+                            <label class="checkbox-label"><input type="checkbox" name="women_status" class="women-check"
+                                    value="授乳中">
+                                <span>授乳中</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entry.2101115460">★15歳未満の方<br>現在の体重</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="entry.2101115460" name="entry.2101115460" step="0.1"
+                                placeholder="例: 35">
+                            <span class="unit">kg</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- End extended-questions -->
+
+
+            <div class="submit-action">
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    <span class="btn-text">送信する</span>
+                    <span class="spinner" style="display:none;"></span>
+                </button>
+            </div>
+
+        </form>
+
+
+        <!-- 送信完了メッセージ -->
+        <div id="thankYouMessage" class="thank-you-message" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h2>送信が完了しました</h2>
+            <p>ご協力ありがとうございました。<br>※この個人情報に関しては、他の目的には使用いたしません。</p>
+            <button onclick="location.reload()" class="btn-secondary">もう一度回答する</button>
+        </div>
+
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="script.js?v=2026032301"></script>
+    <script>
+
+        // Toggle "Other" text inputs
+        function toggleOtherInput(checkboxId, inputId) {
+            const checkbox = document.getElementById(checkboxId);
+            const textInput = document.getElementById(inputId);
+            if (checkbox.checked) {
+                textInput.style.display = 'inline-block';
+                textInput.focus();
+            } else {
+                textInput.style.display = 'none';
+                textInput.value = ''; // 隠す時に中身もクリアする
+            }
+        }
+
+        // フリガナ自動補完：IMEの読みがな（ヒラガナ）をカタカナに変換して反映
+        function setupFuriganaAutoFill() {
+            const nameInput = document.getElementById('entry.2108592001');
+            const kanaInput = document.getElementById('entry.1016463931');
+            if (!nameInput || !kanaInput) return;
+
+            let accKana = '';        // 確定済みのカタカナ累積
+            let lastHiragana = '';   // 現在のIMEセッションの最後のヒラガナ読み
+
+            function toKatakana(str) {
+                return (str || '').replace(/[\u3041-\u3096]/g, function(ch) {
+                    return String.fromCharCode(ch.charCodeAt(0) + 0x60);
+                });
+            }
+
+            // IME変換開始
+            nameInput.addEventListener('compositionstart', function() {
+                lastHiragana = '';
+            });
+
+            // IME変換中
+            nameInput.addEventListener('compositionupdate', function(e) {
+                const data = e.data || '';
+                // ヒラガナを含む場合のみフリガナを更新（漢字変換後は無視）
+                if (/[\u3041-\u3096]/.test(data)) {
+                    lastHiragana = toKatakana(data);
+                    kanaInput.value = accKana + lastHiragana;
+                }
+            });
+
+            // IME変換確定（漢字になっても最後のヒラガナ読みでフリガナを確定）
+            nameInput.addEventListener('compositionend', function() {
+                if (lastHiragana) {
+                    accKana += lastHiragana;
+                }
+                lastHiragana = '';
+                kanaInput.value = accKana;
+            });
+
+            // お名前を全消去したらフリガナもリセット
+            nameInput.addEventListener('input', function(e) {
+                if (!e.isComposing && nameInput.value === '') {
+                    accKana = '';
+                    lastHiragana = '';
+                    kanaInput.value = '';
+                }
+            });
+        }
+        setupFuriganaAutoFill();
+
+    </script>
+</body>
+
+</html>
