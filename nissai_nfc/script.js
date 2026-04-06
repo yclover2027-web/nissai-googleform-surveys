@@ -291,7 +291,7 @@ function setupMynumberToggle() {
 /**
  * LIFFの初期化とプロフィール情報の取得
  * 友だち登録済みの場合はそのままフォームを表示
- * 未登録の場合は友だち追加リンクを表示
+ * 未登録の場合は友だち追加を促す画面を表示
  */
 function initializeLiff() {
     const liffId = CONFIG.LIFF_ID;
@@ -305,20 +305,76 @@ function initializeLiff() {
         document.getElementById('customForm').style.display = 'block';
     }
 
+    // 友だち状態を再チェックして、友だちならフォームを表示する
+    function checkAndShow() {
+        if (!liff.isLoggedIn()) return;
+        liff.getFriendship()
+            .then(data => {
+                if (data.friendFlag) {
+                    showForm();
+                }
+            })
+            .catch(err => console.error('Friendship check error:', err));
+    }
+
+    // 画面に「戻ってきた」時に自動でチェックを行う
+    window.addEventListener('focus', checkAndShow);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') checkAndShow();
+    });
+
     // 友だち追加を促す画面を表示するヘルパー関数
     function showFriendPrompt() {
         const loadingMsg = document.getElementById('loadingMessage');
         if (loadingMsg) {
             loadingMsg.innerHTML = '<div style="text-align:center; padding: 30px 20px;">' +
-                '<p style="font-size: 1.1rem; margin-bottom: 15px;">アンケートにご回答いただくには<br>LINE友だち追加が必要です。</p>' +
-                '<a href="' + CONFIG.LINE_ADD_FRIEND_URL + '" style="display: inline-block; background: #06C755; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem;">LINEで友だち追加する</a>' +
-                '<p style="margin-top: 20px; font-size: 0.85rem; color: #718096;">友だち追加後、このページを再読み込みしてください。</p>' +
+                '<p style="font-size: 1.1rem; margin-bottom: 20px; font-weight:bold;">アンケートにご回答いただくには<br>LINE友だち追加が必要です。</p>' +
+                // メインの追加ボタン（その場で追加を試みる）
+                '<button id="addFriendBtn" style="display: block; width: 100%; background: #06C755; color: #fff; padding: 16px; border-radius: 12px; border:none; text-decoration: none; font-weight: bold; font-size: 1.1rem; cursor:pointer; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">LINEで友だち追加する</button>' +
+                // 予備のチェックボタン
+                '<button id="checkFriendBtn" style="display: block; width: 100%; background: #fff; color: #06C755; padding: 12px; border-radius: 12px; border: 2px solid #06C755; text-decoration: none; font-weight: bold; font-size: 1rem; cursor:pointer; margin-bottom: 15px;">追加したのでアンケートに進む</button>' +
+                // スキップボタン
+                '<button id="skipBtn" style="display: block; width: 100%; background: transparent; color: #718096; padding: 10px; border-radius: 12px; border: 1px solid #cbd5e0; text-decoration: none; font-size: 0.9rem; cursor:pointer;">友だち登録せずに回答する</button>' +
+                '<p style="margin-top: 20px; font-size: 0.85rem; color: #718096; line-height:1.5;">※「友だち追加する」を押して登録した後、この画面に戻ってきてください。</p>' +
                 '</div>';
+
+            // その場で追加ポップアップを試みるボタンの処理
+            const addFriendBtn = document.getElementById('addFriendBtn');
+            if (addFriendBtn) {
+                addFriendBtn.addEventListener('click', () => {
+                    // LIFF内ポップアップを試みる (Bot Link設定が必要)
+                    if (liff.requestFriendship) {
+                        liff.requestFriendship()
+                            .then(() => {
+                                // 完了・戻り後にチェック
+                                checkAndShow();
+                            })
+                            .catch(() => {
+                                // 失敗（設定未完了など）時は従来のURLへ飛ばす
+                                window.location.href = CONFIG.LINE_ADD_FRIEND_URL;
+                            });
+                    } else {
+                        // 未対応時は従来のURLへ飛ばす
+                        window.location.href = CONFIG.LINE_ADD_FRIEND_URL;
+                    }
+                });
+            }
+
+            // 手動チェックボタン
+            const checkFriendBtn = document.getElementById('checkFriendBtn');
+            if (checkFriendBtn) {
+                checkFriendBtn.addEventListener('click', checkAndShow);
+            }
+
+            // スキップボタンの処理
+            const skipBtn = document.getElementById('skipBtn');
+            if (skipBtn) {
+                skipBtn.addEventListener('click', showForm);
+            }
         }
     }
 
     if (typeof liff === 'undefined') {
-        // LIFF SDKが読み込めなかった場合もフォームを表示
         showForm();
         return;
     }
@@ -326,13 +382,12 @@ function initializeLiff() {
     liff.init({ liffId: liffId })
         .then(() => {
             if (!liff.isLoggedIn()) {
-                // 自動遷移（認可画面やログイン）を行う
                 liff.login();
-                return; // login()が走るとリダイレクトされるため以降の処理は不要
+                return;
             }
 
             // プロフィール名を取得
-            const profilePromise = liff.getProfile()
+            liff.getProfile()
                 .then(profile => {
                     const lineNameInput = document.getElementById('entry.1331782479');
                     if (lineNameInput && !lineNameInput.value) {
@@ -344,33 +399,26 @@ function initializeLiff() {
                 });
 
             // 友だち登録状態を確認
-            const friendshipPromise = liff.getFriendship()
+            liff.getFriendship()
                 .then(data => {
-                    return data.friendFlag;
-                })
-                .catch(err => {
-                    console.error('LIFF getFriendship error:', err);
-                    return true; // エラー時はフォーム表示
-                });
-
-            Promise.all([profilePromise, friendshipPromise])
-                .then(([_, isFriend]) => {
-                    // URLやハッシュからスキップフラグがあるか確認（LIFF経由でのクエリ欠損・エンコード対策）
+                    // スキップフラグの確認
                     const currentUrl = window.location.href;
                     const skipPrompt = currentUrl.includes('skip=true') || currentUrl.includes('%3Fskip%3Dtrue') || currentUrl.includes('#skip');
 
-                    if (isFriend || skipPrompt) {
-                        // 友だち登録済み または スキップパラメータあり → そのままフォーム表示
+                    if (data.friendFlag || skipPrompt) {
                         showForm();
                     } else {
-                        // 友だち未登録 → 友だち追加を促す
                         showFriendPrompt();
                     }
+                })
+                .catch(err => {
+                    console.error('LIFF getFriendship error:', err);
+                    showForm(); // エラー時は念のため表示
                 });
         })
         .catch(err => {
             console.error('LIFF init error:', err);
-            // 初期化エラーでもフォームを表示
             showForm();
         });
 }
+
