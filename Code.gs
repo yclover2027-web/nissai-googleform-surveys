@@ -7,7 +7,7 @@
 // 設定項目（他店舗展開時はここを変更）
 // ==========================================================================
 const STORE_NAME = 'クローバー薬局';
-const FOLDER_ID = '1830wThmRTlpZdZaCK9mVbXGMiUj8pF2A'; 
+const FOLDER_ID = '1AWpZQwtF2VusSpJf9PF3OnurIdrHI6uj'; // アンケートにっさい店フォルダ
 const SPREADSHEET_ID = '1vaSrrAEP688wvgoKcdpOAzYDFkJtxt4e38JIXQ83dcA';
 const PDF_TITLE_PREFIX = '問診票_';
 
