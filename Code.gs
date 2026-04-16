@@ -92,6 +92,7 @@ function writeToSpreadsheet(data) {
     '初めて': data.isFirst,
     '性別': data.sex,
     '症状': data.symptoms,
+    'かかりつけ': data.kakaritsu,
     'ジェネリック': data.generic,
     '手帳': data.handbook,
     'アレルギーで': data.hasAllergy,
@@ -172,6 +173,7 @@ function createHtmlTemplate(data) {
     + '<div class="section-header">問診項目</div>'
     + '<table>'
     + '<tr><td class="label">本日はどのような症状で受診されましたか？ :</td><td class="value">' + (data.symptoms || '-') + '</td></tr>'
+    + '<tr><td class="label">かかりつけ薬剤師は希望されますか？ :</td><td class="value">' + (data.kakaritsu || '-') + '</td></tr>'
     + '<tr><td class="label">ジェネリック医薬品をご希望になりますか？ :</td><td class="value">' + (data.generic || '-') + '</td></tr>'
     + '<tr><td class="label">お薬手帳をお持ちですか？ :</td><td class="value">' + (data.handbook || '-') + '</td></tr>'
     + '<tr><td class="label">体質について :</td><td class="value">' + (data.constitution || '-') + '</td></tr>'

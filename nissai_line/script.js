@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let symptoms = formData.get('entry.150137659') || '';
 
+        // かかりつけ薬剤師の希望
+        const kakaritsu = formData.get('entry.kakaritstuke_yakuzaishi') || '-';
+
         // 体質の結合処理
         let taishitsuResult = "体質: いいえ";
         const taishitsuCheckboxes = Array.from(document.querySelectorAll('.taishitsu-check:checked'));
@@ -141,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lineName: formData.get('entry.1331782479') || '',
             isFirst: isFirst,
             symptoms: symptoms,
+            kakaritsu: kakaritsu,
             generic: generic,
             handbook: formData.get('entry.1482297776') || '',
             constitution: constitution,
